@@ -1,4 +1,4 @@
-package kram.advent.day2;
+package kram.advent.utils;
 
 import java.io.IOException;
 import java.net.URI;

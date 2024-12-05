@@ -1,6 +1,6 @@
 package kram.advent.day3;
 
-import kram.advent.day2.ReadFromFile;
+import kram.advent.utils.ReadFromFile;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;

@@ -1,5 +1,7 @@
 package kram.advent.day2;
 
+import kram.advent.utils.ReadFromFile;
+
 import java.util.ArrayList;
 import java.util.List;
 

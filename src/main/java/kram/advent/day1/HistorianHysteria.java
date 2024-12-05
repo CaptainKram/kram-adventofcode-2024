@@ -1,5 +1,7 @@
 package kram.advent.day1;
 
+import kram.advent.utils.QuickSortWithArrayList;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;

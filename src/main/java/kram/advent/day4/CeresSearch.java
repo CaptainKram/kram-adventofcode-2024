@@ -1,6 +1,6 @@
 package kram.advent.day4;
 
-import kram.advent.day2.ReadFromFile;
+import kram.advent.utils.ReadFromFile;
 
 public class CeresSearch {
 

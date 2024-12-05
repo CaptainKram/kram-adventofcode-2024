@@ -1,4 +1,4 @@
-package kram.advent.day1;
+package kram.advent.utils;
 
 import java.util.Arrays;
 
