@@ -7,13 +7,30 @@ import java.util.*;
 public class PrintQueue {
 
     private static final Map<Integer, List<Integer>> pageOrderingRules = new HashMap<>();
+    private static final List<List<Integer>> updates = new ArrayList<>();
 
     public static void main(String[] args) {
 
         List<String> input = ReadFromFile.readFileList("printques");
 
-        List<List<Integer>> updates = new ArrayList<>();
+        parseInputs(input);
 
+        int sum = 0;
+        int incorrectSum = 0;
+        for (List<Integer> update : updates) {
+            boolean correct = checkIfCorrect(update);
+            if (correct) {
+                sum += update.get(update.size() / 2);
+            } else {
+                makeCorrect(update);
+                incorrectSum += update.get(update.size() / 2);
+            }
+        }
+
+        System.out.println(incorrectSum);
+    }
+
+    private static void parseInputs(List<String> input) {
         boolean rules = true;
         for (String s : input) {
             if (s.isEmpty()) {
@@ -23,11 +40,10 @@ public class PrintQueue {
             if (rules) {
                 int pipe = s.indexOf('|');
                 int key = Integer.parseInt(s.substring(0, pipe));
-                int value = Integer.parseInt(s.substring(pipe+1));
+                int value = Integer.parseInt(s.substring(pipe + 1));
                 if (pageOrderingRules.containsKey(key)) {
                     pageOrderingRules.get(key).add(value);
-                }
-                else {
+                } else {
                     pageOrderingRules.put(key, new ArrayList<>());
                     pageOrderingRules.get(key).add(value);
                 }
@@ -40,24 +56,6 @@ public class PrintQueue {
                 updates.add(update);
             }
         }
-
-        int sum = 0;
-        List<List<Integer>> incorrectlyOrdered = new ArrayList<>();
-        for (List<Integer> update : updates) {
-            boolean correct = checkIfCorrect(update);
-            if (correct) {
-                sum += update.get(update.size() / 2);
-            } else {
-                incorrectlyOrdered.add(update);
-            }
-        }
-
-        int incorrectSum = 0;
-        for (List<Integer> update : incorrectlyOrdered) {
-            makeCorrect(update);
-            incorrectSum += update.get(update.size() / 2);
-        }
-        System.out.println(incorrectSum);
     }
 
     private static void makeCorrect(List<Integer> update) {

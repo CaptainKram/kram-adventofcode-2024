@@ -1,17 +1,14 @@
 package kram.advent.day4;
 
 import kram.advent.utils.ReadFromFile;
+import kram.advent.utils.StringUtil;
 
 public class CeresSearch {
 
     public static void main(String[] args) {
 
         String input = ReadFromFile.readFileString("xmas");
-        String[] lines = input.split("\\n");
-        char[][] matrix = new char[lines.length][];
-        for (int i = 0; i < lines.length; i++) {
-            matrix[i] = lines[i].toCharArray();
-        }
+        char[][] matrix = StringUtil.stringToCharArr(input);
 
         int xmasCounter = 0;
         int masCounter = 0;
