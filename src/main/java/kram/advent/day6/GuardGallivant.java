@@ -15,7 +15,7 @@ public class GuardGallivant {
 
     public static void main(String[] args) {
 
-        String input = ReadFromFile.readFileString("guardpath");
+        String input = ReadFromFile.readFileString("guardpathTest");
         char[][] matrix = StringUtil.stringToCharArr(input);
 
         Guard guard = findGuard(matrix);
@@ -23,7 +23,7 @@ public class GuardGallivant {
         obstructionPotential.add(guard.getPosition());
 
         while (!guard.isOutside()) {
-            Position obstruction = guard.findObstructionPotential(matrix);
+            Position obstruction = guard.haveIBeenHereBefore(matrix);
             if (obstruction != null) {
                 obstructionPotential.add(obstruction);
             }
@@ -31,7 +31,6 @@ public class GuardGallivant {
             markedPositions.add(p);
         }
 
-        System.out.println(obstructionPotential);
         System.out.println(obstructionPotential.size() - 1);
     }
 
