@@ -6,7 +6,7 @@ import java.util.*;
 
 public class BridgeRepair {
 
-    public static final Map<Long, List<Long>> calibrationMap = new HashMap<>();
+    public static Map<Long, List<Long>> calibrationMap = new HashMap<>();
 
     public static void main(String[] args) {
         List<String> lines = ReadFromFile.readFileList("bridgeRepair");
@@ -25,32 +25,44 @@ public class BridgeRepair {
 
     public static void fillCalibrationMap(List<String> lines) {
         for (String s : lines) {
-            String[] splitLine = s.split(":");
+            String[] splitLine = s.split(": ");
             long result = Long.parseLong(splitLine[0]);
-            List<Long> values = Arrays.stream(splitLine[1].trim().split(" ")).map(Long::parseLong).toList();
+            List<Long> values = Arrays.stream(splitLine[1].split(" ")).map(Long::parseLong).toList();
             calibrationMap.put(result, values);
         }
     }
 
     public static boolean canBeCalibrated(long result, List<Long> values) {
         List<Long> results = new ArrayList<>();
-        if (values.size() > 1) {
-            results.add(values.get(0) + values.get(1));
-            results.add(values.get(0) * values.get(1));
+        results.add(values.get(0));
+        for (int i = 1; i < values.size(); i++) {
+            if (i == values.size() - 1) {
+                List<Long> finalList = calibrate(results, values.get(i), result);
+                return finalList.contains(result);
+            } else {
+                results = calibrate(results, values.get(i), result);
+            }
         }
-        for (int i = 2; i < values.size(); i++) {
-            calibrate(results, results.size(), values.get(i));
-        }
-        return results.contains(result);
+        return false;
     }
 
-    private static void calibrate(List<Long> results , int limit, long value) {
+    private static List<Long> calibrate(List<Long> results , long value, long result) {
         List<Long> temp = new ArrayList<>();
-        for (int i = 0; i < limit; i++) {
-            temp.add(results.get(i) * value);
-            temp.add(results.get(i) + value);
+        for (Long num : results) {
+            if (num > result) {
+                continue;
+            }
+            temp.add(num * value);
+            temp.add(num + value);
+            temp.add(concatNumbers(num, value));
         }
         results.addAll(temp);
+        return temp;
+    }
+
+    private static long concatNumbers(long one, long two) {
+        String valuesAsString = String.valueOf(one).concat(String.valueOf(two));
+        return Long.parseLong(valuesAsString);
     }
 
 }
