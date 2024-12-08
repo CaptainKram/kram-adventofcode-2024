@@ -27,6 +27,6 @@ public class ResonantCollinearityTest {
         fillAntennasMap(chars);
         findAntinodes(chars);
 
-        assertEquals(14, uniquePositions.size());
+        assertEquals(34, uniquePositions.size());
     }
 }

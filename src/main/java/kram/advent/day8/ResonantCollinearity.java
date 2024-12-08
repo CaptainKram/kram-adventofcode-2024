@@ -8,6 +8,7 @@ import java.util.*;
 
 public class ResonantCollinearity {
 
+    private static final Map<Character, Integer> charsCount = new HashMap<>();
     private static final Map<Character, List<ReversedPosition>> antennasMap = new HashMap<>();
     public static Set<ReversedPosition> uniquePositions = new HashSet<>();
 
@@ -27,9 +28,11 @@ public class ResonantCollinearity {
                 if (c != '.') {
                     if (antennasMap.containsKey(c)) {
                         antennasMap.get(c).add(new ReversedPosition(i, j));
+                        charsCount.put(c, charsCount.get(c) + 1);
                     } else {
                         antennasMap.put(c, new ArrayList<>());
                         antennasMap.get(c).add(new ReversedPosition(i, j));
+                        charsCount.put(c, 1);
                     }
                 }
             }
@@ -46,32 +49,53 @@ public class ResonantCollinearity {
                         continue;
                     }
                     ReversedPosition pj = positions.get(j);
-                    int ydiff = Math.abs(pi.y() - pj.y());
-                    int xdiff = Math.abs(pi.x() - pj.x());
-                    boolean iBiggerY = pi.y() > pj.y();
-                    boolean iBiggerX = pi.x() > pj.x();
-                    if (iBiggerY && iBiggerX) {
-                        insertPosition(pi.y() + ydiff, pi.x() + xdiff, chars);
-                        insertPosition(pj.y() - ydiff, pj.x() - xdiff, chars);
-                    } else if (iBiggerY) {
-                        insertPosition(pi.y() + ydiff, pi.x() - xdiff, chars);
-                        insertPosition(pj.y() - ydiff, pj.x() + xdiff, chars);
-                    } else if (iBiggerX) {
-                        insertPosition(pi.y() - ydiff, pi.x() + xdiff, chars);
-                        insertPosition(pj.y() + ydiff, pj.x() - xdiff, chars);
-                    } else {
-                        insertPosition(pi.y() - ydiff, pi.x() - xdiff, chars);
-                        insertPosition(pj.y() + ydiff, pj.x() + xdiff, chars);
-                    }
+                    handlePositions(chars, entry.getKey(), pi.y(), pi.x(), pj.y(), pj.x());
+                }
+                if (charsCount.get(entry.getKey()) >= 2) {
+                    uniquePositions.add(pi);
                 }
             }
         }
     }
 
-    private static void insertPosition(int y, int x, char[][] chars) {
+    private static void handlePositions(char[][] chars, char ch, int y1, int x1, int y2, int x2) {
+        int ydiff = Math.abs(y1 - y2);
+        int xdiff = Math.abs(x1 - x2);
+        boolean iBiggerY = y1 > y2;
+        boolean iBiggerX = x1 > x2;
+        boolean higher;
+        boolean lower;
+        int valueHolderY = ydiff;
+        int valueHolderX = xdiff;
+        do {
+            if (iBiggerY && iBiggerX) {
+                higher = insertPosition(chars, y1 + ydiff, x1 + xdiff);
+                lower = insertPosition(chars, y2 - ydiff, x2 - xdiff);
+            } else if (iBiggerY) {
+                higher = insertPosition(chars, y1 + ydiff, x1 - xdiff);
+                lower = insertPosition(chars, y2 - ydiff, x2 + xdiff);
+            } else if (iBiggerX) {
+                higher = insertPosition(chars, y1 - ydiff, x1 + xdiff);
+                lower = insertPosition(chars, y2 + ydiff, x2 - xdiff);
+            } else {
+                higher = insertPosition(chars, y1 - ydiff, x1 - xdiff);
+                lower = insertPosition(chars, y2 + ydiff, x2 + xdiff);
+            }
+            ydiff += valueHolderY;
+            xdiff += valueHolderX;
+            if (charsCount.get(ch) < 2) {
+                higher = false;
+                lower = false;
+            }
+        } while (higher || lower);
+    }
+
+    private static boolean insertPosition(char[][] chars, int y, int x) {
         if (y >= 0 && x >= 0 && y < chars.length && x < chars[y].length) {
             uniquePositions.add(new ReversedPosition(y, x));
+            return true;
         }
+        return false;
     }
 
     private static void printAntinodes(char[][] chars) {
