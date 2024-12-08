@@ -1,4 +1,4 @@
-package kram.advent.day6;
+package kram.advent.records;
 
 public record Position(int x, int y) {
 }

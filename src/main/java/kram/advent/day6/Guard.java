@@ -1,5 +1,7 @@
 package kram.advent.day6;
 
+import kram.advent.records.Position;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;

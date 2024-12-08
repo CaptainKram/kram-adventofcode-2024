@@ -1,5 +1,5 @@
 import kram.advent.day6.Guard;
-import kram.advent.day6.Position;
+import kram.advent.records.Position;
 import kram.advent.utils.StringUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ public class GuardGallivantTest {
 
     private Set<Position> obstructionPotential;
 
-    private String guardPathTest = """
+    private static final String guardPathTest = """
             ....#.....
             .........#
             ..........
@@ -27,7 +27,7 @@ public class GuardGallivantTest {
             ......#...
             """;
 
-    private String getGuardPathTest2 = """
+    private static final String guardPathTest2 = """
             .#...
             ....#
             .....
@@ -36,7 +36,7 @@ public class GuardGallivantTest {
             ..#..
             """;
 
-    private String getGetGuardPathTest3 = """
+    private static final String guardPathTest3 = """
             ##..
             ...#
             ....
@@ -50,7 +50,7 @@ public class GuardGallivantTest {
 
     @Test
     public void day6Part2Test1() {
-        char[][] matrix = StringUtil.stringToCharArr(this.guardPathTest);
+        char[][] matrix = StringUtil.stringToCharArr(guardPathTest);
 
         Guard guard = findGuard(matrix);
         assert guard != null;
@@ -69,7 +69,7 @@ public class GuardGallivantTest {
 
     @Test
     public void day6Part2Test2() {
-        char[][] matrix = StringUtil.stringToCharArr(this.getGuardPathTest2);
+        char[][] matrix = StringUtil.stringToCharArr(guardPathTest2);
 
         Guard guard = findGuard(matrix);
         assert guard != null;
@@ -88,7 +88,7 @@ public class GuardGallivantTest {
 
     @Test
     public void day6Part2Test3() {
-        char[][] matrix = StringUtil.stringToCharArr(this.getGetGuardPathTest3);
+        char[][] matrix = StringUtil.stringToCharArr(guardPathTest3);
 
         Guard guard = findGuard(matrix);
         assert guard != null;

@@ -1,5 +1,6 @@
 package kram.advent.day6;
 
+import kram.advent.records.Position;
 import kram.advent.utils.ReadFromFile;
 import kram.advent.utils.StringUtil;
 
