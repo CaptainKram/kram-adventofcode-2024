@@ -1,18 +1,17 @@
 package kram.advent.day9;
 
+import kram.advent.utils.ReadFromFile;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class DiskFragmenter {
 
-    private static final String diskFragmenterTestInput = "2333133121414131402";
-    public static final List<File> ids = new ArrayList<>();
-    public static final List<Space> spaces = new ArrayList<>();
+    public static final List<Memory> files = new ArrayList<>();
+    public static final List<Memory> spaces = new ArrayList<>();
 
     public static void main(String[] args) {
-//        String input = ReadFromFile.readFileString("diskmap");
-        String input = diskFragmenterTestInput;
+        String input = ReadFromFile.readFileString("diskmap");
         fillLists(input);
 
         List<Memory> blocks = turnToBlocks();
@@ -24,58 +23,63 @@ public class DiskFragmenter {
 
     public static long calculateChecksum(List<Memory> blocks) {
         long result = 0;
-        for (int i = 0; i < blocks.size(); i++) {
-            if (blocks.get(i) instanceof Space) {
-                continue;
-            }
-            else if (blocks.get(i) instanceof File) {
-                int currentNumber = ((File) blocks.get(i)).getId();
-                result += (long) currentNumber * i;
+        List<Object> distributed = distribute(blocks);
+        for (int i = 0; i < distributed.size(); i++) {
+            Object o = distributed.get(i);
+            if (o instanceof File file) {
+                result += (long) file.getId() * i;
             }
         }
         return result;
     }
 
-    public static void rearrange(List<Memory> blocks) {
-        int pointLeft = 0;
-        int pointRight = blocks.size() - 1;
-        while (pointLeft < pointRight) {
-            if (!(blocks.get(pointLeft) instanceof Space)) {
-                pointLeft++;
-            } else if (!(blocks.get(pointRight) instanceof Space)) {
-                Collections.swap(blocks, pointLeft, pointRight);
-                pointLeft++;
-                pointRight--;
+    private static List<Object> distribute(List<Memory> blocks) {
+        List<Object> distributed = new ArrayList<>();
+        for (Memory block : blocks) {
+            if (block.getFiles().isEmpty()) {
+                for (int j = 0; j < block.getSize(); j++) {
+                    distributed.add(block);
+                }
             } else {
-                pointRight--;
+                List<File> fileList = block.getFiles();
+                distributed.addAll(fileList);
+                int leftover = block.getSize() - fileList.size();
+                for (int j = 0; j < leftover; j++) {
+                    distributed.add(block);
+                }
+            }
+        }
+        return distributed;
+    }
+
+    public static void rearrange(List<Memory> blocks) {
+        for (int i = blocks.size() - 1; i >= 0; i--) {
+            Memory file = blocks.get(i);
+            if (!file.getFiles().isEmpty()) {
+                for (int j = 0; j < i; j++) {
+                    Memory space = blocks.get(j);
+                    if (space.getSize() - space.getFiles().size() >= file.getFiles().size()) {
+                        space.addMultipleFiles(file.getFiles());
+                    }
+                }
             }
         }
     }
 
     public static List<Memory> turnToBlocks() {
         List<Memory> memory = new ArrayList<>();
-        for (int i = 0; i < ids.size(); i++) {
-            addFile(i, memory);
+        for (int i = 0; i < files.size(); i++) {
+            memory.add(files.get(i));
             addSpace(i, memory);
         }
         return memory;
     }
 
-    private static void addFile(int id, List<Memory> memory) {
-        File file = ids.get(id);
-        for (int i = 0; i < file.getSize(); i++) {
-            memory.add(file);
-        }
-    }
-
-    private static void addSpace(int id, List<Memory> memory) {
-        if (id >= spaces.size()) {
+    private static void addSpace(int i, List<Memory> memory) {
+        if (i >= spaces.size()) {
             return;
         }
-        Space space = spaces.get(id);
-        for (int i = 0; i < space.getSize(); i++) {
-            memory.add(space);
-        }
+        memory.add(spaces.get(i));
     }
 
     public static void fillLists(String input) {
@@ -83,10 +87,13 @@ public class DiskFragmenter {
         for (int i = 0; i < input.length(); i++) {
             int currentNumber = Integer.parseInt(String.valueOf(input.charAt(i)));
             if (i % 2 == 0) {
-                File file = new File(counter++, currentNumber);
-                ids.add(file);
+                Memory m = new Memory(currentNumber);
+                if (currentNumber != 0) {
+                    m.addFile(new File(counter++, currentNumber));
+                }
+                files.add(m);
             } else {
-                spaces.add(new Space(currentNumber));
+                spaces.add(new Memory(currentNumber));
             }
         }
     }
