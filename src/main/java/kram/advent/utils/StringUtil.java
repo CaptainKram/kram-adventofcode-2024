@@ -19,4 +19,24 @@ public class StringUtil {
         return linesStream.toList();
     }
 
+    public static boolean inBounds(char[][] matrix, int x, int y) {
+        return x >= 0 && y >= 0 && x < matrix[y].length && y < matrix.length;
+    }
+
+    public static boolean inBoundsUp(char[][] matrix, int y) {
+        return y >= 0;
+    }
+
+    public static boolean inBoundsDown(char[][] matrix, int y) {
+        return y < matrix.length;
+    }
+
+    public static boolean inBoundsLeft(char[][] matrix, int x) {
+        return x >= 0;
+    }
+
+    public static boolean inBoundsRight(char[][] matrix, int x, int y) {
+        return x < matrix[y].length;
+    }
+
 }
