@@ -20,7 +20,7 @@ public class StringUtil {
     }
 
     public static boolean inBounds(char[][] matrix, int x, int y) {
-        return x >= 0 && y >= 0 && x < matrix[y].length && y < matrix.length;
+        return x >= 0 && y >= 0 && y < matrix.length && x < matrix[y].length;
     }
 
     public static boolean inBoundsUp(char[][] matrix, int y) {

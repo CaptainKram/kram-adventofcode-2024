@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GardenGroupsTest {
 
-    // 140
     private static final String gardenGroupsTestInput1 = """
             AAAA
             BBCD
@@ -17,7 +16,6 @@ public class GardenGroupsTest {
             EEEC
             """;
 
-    // 772
     private static final String gardenGroupsTestInput2 = """
             OOOOO
             OXOXO
@@ -26,7 +24,6 @@ public class GardenGroupsTest {
             OOOOO
             """;
 
-    // 1930
     private static final String gardenGroupsTestInput3 = """
             RRRRIICCFF
             RRRRIICCCF
@@ -40,27 +37,56 @@ public class GardenGroupsTest {
             MMMISSJEEE
             """;
 
+    private static final String gardenGroupsTestInput4 = """
+            EEEEE
+            EXXXX
+            EEEEE
+            EXXXX
+            EEEEE
+            """;
+
+    private static final String gardenGroupsTestInput5 = """
+            AAAAAA
+            AAABBA
+            AAABBA
+            ABBAAA
+            ABBAAA
+            AAAAAA
+            """;
+
     @BeforeEach
     void setUp() {
         GardenGroups.beenHere.clear();
     }
 
     @Test
-    public void gardenGroupsPart1Test1() {
+    public void gardenGroupsTest1() {
         int result = doWork(gardenGroupsTestInput1);
-        assertEquals(140, result);
+        assertEquals(80, result);
     }
 
     @Test
-    public void gardenGroupsPart1Test2() {
+    public void gardenGroupsTest2() {
         int result = doWork(gardenGroupsTestInput2);
-        assertEquals(772, result);
+        assertEquals(436, result);
     }
 
     @Test
-    public void gardenGroupsPart1Test3() {
+    public void gardenGroupsTest3() {
         int result = doWork(gardenGroupsTestInput3);
-        assertEquals(1930, result);
+        assertEquals(1206, result);
+    }
+
+    @Test
+    public void gardenGroupsTest4() {
+        int result = doWork(gardenGroupsTestInput4);
+        assertEquals(236, result);
+    }
+
+    @Test
+    public void gardenGroupsTest5() {
+        int result = doWork(gardenGroupsTestInput5);
+        assertEquals(368, result);
     }
 
     private static int doWork(String input) {

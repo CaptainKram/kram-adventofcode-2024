@@ -55,18 +55,84 @@ public class GardenGroups {
 
     private static int calculatePerimeter(char[][] matrix, int i, int j) {
         int perimeter = 0;
-        if (!StringUtil.inBoundsUp(matrix, i-1) || matrix[i-1][j] != matrix[i][j]) {
+
+        char here = matrix[i][j];
+
+        boolean inboundsUp = StringUtil.inBoundsUp(matrix, i-1);
+        boolean inboundsDown = StringUtil.inBoundsDown(matrix, i+1);
+        boolean inboundsLeft = StringUtil.inBoundsLeft(matrix, j-1);
+        boolean inboundsRight = StringUtil.inBoundsRight(matrix, j+1, i);
+
+        boolean inboundsUpLeft = StringUtil.inBounds(matrix, i-1, j-1);
+        boolean inboundsUpRight = StringUtil.inBounds(matrix, i-1, j+1);
+        boolean inboundsDownLeft = StringUtil.inBounds(matrix, i+1, j-1);
+        boolean inboundsDownRight = StringUtil.inBounds(matrix, i+1, j+1);
+
+        boolean upNeighbourDidNotCountLeft = true;
+        boolean upNeighbourDidNotCountRight = true;
+        boolean upNeighbourDidNotCountOut = true;
+
+        boolean downNeighbourDidNotCountLeft = true;
+        boolean downNeighbourDidNotCountRight = true;
+        boolean downNeighbourDidNotCountOut = true;
+
+        boolean leftNeighbourDidNotCountUp = true;
+        boolean leftNeighbourDidNotCountDown = true;
+        boolean leftNeighbourDidNotCountOut = true;
+
+        boolean rightNeighbourDidNotCountUp = true;
+        boolean rightNeighbourDidNotCountDown = true;
+        boolean rightNeighbourDidNotCountOut = true;
+
+        if (inboundsUp) {
+            char up = matrix[i-1][j];
+            upNeighbourDidNotCountLeft = up != here || !beenHere.contains(new ReversedPosition(i - 1, j)) || (inboundsLeft && matrix[i][j - 1] == here) || (inboundsUpLeft && matrix[i-1][j-1] == here);
+            upNeighbourDidNotCountRight = up != here || !beenHere.contains(new ReversedPosition(i - 1, j)) || (inboundsRight && matrix[i][j + 1] == here) || (inboundsUpRight && matrix[i-1][j+1] == here);
+            upNeighbourDidNotCountOut = up != here || !beenHere.contains(new ReversedPosition(i - 1, j));
+        }
+        if (inboundsDown) {
+            char down = matrix[i+1][j];
+            downNeighbourDidNotCountLeft = down != here || !beenHere.contains(new ReversedPosition(i + 1, j)) || (inboundsLeft && matrix[i][j - 1] == here) || (inboundsDownLeft && matrix[i+1][j-1] == here);
+            downNeighbourDidNotCountRight = down != here || !beenHere.contains(new ReversedPosition(i + 1, j)) || (inboundsRight && matrix[i][j + 1] == here) || (inboundsDownRight && matrix[i+1][j+1] == here);
+            downNeighbourDidNotCountOut = down != here || !beenHere.contains(new ReversedPosition(i + 1, j));
+        }
+        if (inboundsLeft) {
+            char left = matrix[i][j-1];
+            leftNeighbourDidNotCountUp = left != here || !beenHere.contains(new ReversedPosition(i, j - 1)) || (inboundsUp && matrix[i - 1][j] == here) || (inboundsUpLeft && matrix[i-1][j-1] == here);
+            leftNeighbourDidNotCountDown = left != here || !beenHere.contains(new ReversedPosition(i, j - 1)) || (inboundsDown && matrix[i + 1][j] == here) || (inboundsDownLeft && matrix[i+1][j-1] == here);
+            leftNeighbourDidNotCountOut = left != here || !beenHere.contains(new ReversedPosition(i, j - 1));
+        }
+        if (inboundsRight) {
+            char right = matrix[i][j+1];
+            rightNeighbourDidNotCountUp = right != here || !beenHere.contains(new ReversedPosition(i, j + 1)) || (inboundsUp && matrix[i - 1][j] == here) || (inboundsDownRight && matrix[i+1][j+1] == here);
+            rightNeighbourDidNotCountDown = right != here || !beenHere.contains(new ReversedPosition(i, j + 1)) || (inboundsDown && matrix[i + 1][j] == here) || (inboundsDownRight && matrix[i+1][j+1] == here);
+            rightNeighbourDidNotCountOut = right != here || !beenHere.contains(new ReversedPosition(i, j + 1));
+        }
+
+        if (!inboundsUp && leftNeighbourDidNotCountOut && rightNeighbourDidNotCountOut) {
+            perimeter++;
+        } else if (inboundsUp && matrix[i-1][j] != here && leftNeighbourDidNotCountUp && rightNeighbourDidNotCountUp) {
             perimeter++;
         }
-        if (!StringUtil.inBoundsDown(matrix, i+1) || matrix[i+1][j] != matrix[i][j]) {
+
+        if (!inboundsDown && leftNeighbourDidNotCountOut && rightNeighbourDidNotCountOut) {
+            perimeter++;
+        } else if (inboundsDown && matrix[i+1][j] != here && leftNeighbourDidNotCountDown && rightNeighbourDidNotCountDown) {
             perimeter++;
         }
-        if (!StringUtil.inBoundsLeft(matrix, j-1) || matrix[i][j-1] != matrix[i][j]) {
+
+        if (!inboundsLeft && upNeighbourDidNotCountOut && downNeighbourDidNotCountOut) {
+            perimeter++;
+        } else if (inboundsLeft && matrix[i][j-1] != here && upNeighbourDidNotCountLeft && downNeighbourDidNotCountLeft) {
             perimeter++;
         }
-        if (!StringUtil.inBoundsRight(matrix, j+1, i) || matrix[i][j+1] != matrix[i][j]) {
+
+        if (!inboundsRight && upNeighbourDidNotCountOut && downNeighbourDidNotCountOut) {
+            perimeter++;
+        } else if (inboundsRight && matrix[i][j+1] != here && upNeighbourDidNotCountRight && downNeighbourDidNotCountRight) {
             perimeter++;
         }
+
         return perimeter;
     }
 
