@@ -36,7 +36,7 @@ public class StringUtil {
     }
 
     public static boolean inBoundsRight(char[][] matrix, int x, int y) {
-        return x < matrix[y].length;
+        return y >= 0 && y < matrix.length && x < matrix[y].length;
     }
 
 }
